@@ -1,0 +1,10 @@
+package pages
+
+import "github.com/ineersa/blog/templates/partials"
+import "github.com/ineersa/blog/models"
+import "github.com/ineersa/blog/structs"
+
+// BodyContent defines HTML content.
+templ BlogPost(postData models.BlogPostData, metadata structs.Metadata) {
+    @partials.BlogPostBodyContent(postData, metadata)
+}

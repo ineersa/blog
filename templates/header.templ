@@ -1,0 +1,82 @@
+package templates
+
+templ MetaTags(keywords, description string) {
+	<meta name="keywords" content={ keywords }/>
+	<meta name="description" content={ description }/>
+}
+
+templ header() {
+   <div>
+      <a aria-label="TailwindBlog" href="/">
+         <div class="flex items-center justify-between">
+            <div class="mr-3">
+               <img src="/static/images/logo.png" alt="Logo" class="w-12"/>
+            </div>
+            <div class="hidden h-6 text-2xl font-semibold sm:block">Ineersa Blog</div>
+         </div>
+      </a>
+   </div>
+   <div class="flex items-center space-x-2 leading-5 sm:space-x-4">
+        <button class="font-medium flex items-center justify-center px-2 py-2 mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-gray-600 dark:text-gray-200 bg-inherit hover:text-primary-500"
+        hx-get="/"
+        hx-trigger="click"
+        hx-indicator="#spinner-overlay"
+        hx-target="#main-content"
+        hx-swap="innerHTML"
+        hx-push-url="true"
+        >
+        Blog
+        </button>
+        <button class="font-medium flex items-center justify-center px-2 py-2 mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-gray-600 dark:text-gray-200 bg-inherit hover:text-primary-500"
+        hx-get="/about"
+        hx-trigger="click"
+        hx-indicator="#spinner-overlay"
+        hx-target="#main-content"
+        hx-swap="innerHTML"
+        hx-push-url="true"
+        >
+        About
+        </button>
+      <div x-data="{ theme: localStorage.getItem('theme') || 'system', dropdownOpen: false }" x-init="$watch('theme', value => { localStorage.setItem('theme', value); changeTheme();})" class="relative inline-block text-left">
+        <div>
+          <button @click="dropdownOpen = !dropdownOpen" type="button" aria-haspopup="menu" :aria-expanded="dropdownOpen" class="flex items-center justify-center w-8 h-8 rounded-full focus:outline-none">
+            <template x-if="theme === 'dark'">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-6 w-6 text-gray-900 dark:text-gray-100">
+                <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+              </svg>
+            </template>
+            <template x-if="theme === 'light'">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-6 w-6 text-gray-900 dark:text-gray-100">
+                <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+              </svg>
+            </template>
+          </button>
+        </div>
+        <div x-show="dropdownOpen" @click.away="dropdownOpen = false" class="absolute right-0 z-50 mt-2 w-32 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none dark:bg-gray-800" aria-labelledby="mode-select-button" role="menu" tabindex="-1">
+          <div class="p-1" role="none">
+            <button @click="theme = 'light'; dropdownOpen = false" class="group flex w-full items-center rounded-md px-2 py-2 text-sm" role="menuitem" tabindex="-1">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-6 w-6 text-gray-900 dark:text-gray-100 mr-2">
+                  <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"></path>
+                </svg>
+                  Light
+            </button>
+            <button @click="theme = 'dark'; dropdownOpen = false" class="group flex w-full items-center rounded-md px-2 py-2 text-sm" role="menuitem" tabindex="-1">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="h-6 w-6 text-gray-900 dark:text-gray-100 mr-2">
+                  <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
+                </svg>
+                  Dark
+            </button>
+            <button @click="dropdownOpen = false; theme = getSystemThemeName();" class="group flex w-full items-center rounded-md px-2 py-2 text-sm" role="menuitem" tabindex="-1">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 text-gray-900 dark:text-gray-100 mr-2">
+                  <rect x="3" y="3" width="14" height="10" rx="2" ry="2"></rect>
+                  <line x1="7" y1="17" x2="13" y2="17"></line>
+                  <line x1="10" y1="13" x2="10" y2="17"></line>
+                </svg>
+                  System
+            </button>
+          </div>
+        </div>
+      </div>
+
+   </div>
+}

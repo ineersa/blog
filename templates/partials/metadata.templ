@@ -1,0 +1,15 @@
+package partials
+
+import "github.com/ineersa/blog/structs"
+
+templ Metadata(metadata structs.Metadata) {
+    if metadata.IsNeedToRender {
+        @templ.JSONScript("metadata-json", metadata)
+        <script>
+            window.metaData = JSON.parse(document.getElementById('metadata-json').textContent);
+            document.getElementsByTagName('meta')["keywords"].content = window.metaData.keywords;
+            document.getElementsByTagName('meta')["description"].content = window.metaData.description;
+            document.title = window.metaData.title;
+        </script>
+    }
+}

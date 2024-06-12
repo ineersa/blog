@@ -1,0 +1,28 @@
+package pages
+
+import "github.com/ineersa/blog/templates/partials"
+import "github.com/ineersa/blog/models"
+import "github.com/ineersa/blog/structs"
+
+// BodyContent defines HTML content.
+templ IndexBodyContent(
+    categories []*models.Category,
+    postsList []*models.PostsListItem,
+    pageData models.PostsListPageData,
+    tagsWithCount []*models.TagWithCount,
+    metadata structs.Metadata,
+) {
+    @partials.Metadata(metadata)
+    @partials.SearchBar(categories, pageData)
+    <div class="flex flex-row justify-left w-full" x-data="{
+        showTagsMobile: false,
+        hideTags: function() {
+            if (!this.showTagsMobile) {
+                let el = document.getElementById('tags-mobile');
+                el.style.display = 'none';
+            }
+        }
+        }" x-on:htmx:after-settle.window="hideTags">
+        @partials.ListBlogPosts(postsList, pageData, tagsWithCount)
+    </div>
+}
