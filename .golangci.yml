@@ -30,9 +30,7 @@ linters-settings:
     min-complexity: 15
 
   gofmt:
-    rewrite-rules:
-      - pattern: 'interface{}'
-        replacement: 'any'
+    simplify: false
 
   mnd:
     checks:
@@ -47,9 +45,6 @@ linters-settings:
     exclude-generated: true
     excludes:
       - G101
-
-  govet:
-    check-shadowing: true
 
   errorlint:
     asserts: false
@@ -70,6 +65,7 @@ linters-settings:
       - name: unexported-return
         disabled: true
       - name: unused-parameter
+
 
 # Linters to enable.
 linters:
@@ -111,7 +107,6 @@ linters:
     - unconvert
     - unparam
     - unused
-    - whitespace
 
 # Issues configuration.
 issues:

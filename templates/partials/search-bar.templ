@@ -2,11 +2,16 @@ package partials
 
 import "github.com/ineersa/blog/models"
 
-templ SearchBar(categories []*models.Category, pageData models.PostsListPageData) {
+templ SearchBar(categories []*models.Category, pageData *models.PostsListPageData) {
     <div class="border-b-2 border-b-gray-200 dark:border-b-gray-700 pb-2">
         <div class="space-y-2 pb-4 pt-4 md:space-y-5">
             <div class="flex items-center justify-center space-x-4 p-4">
-                <form id="search-form" class="flex items-center w-full" method="get" hx-get={pageData.SetSearch("").GetLink()} hx-target="#main-content" hx-swap="innerHTML" hx-push-url="true">
+                <form id="search-form" class="flex items-center w-full" method="get"
+                    hx-get={pageData.GetLink(map[string]string{models.URISearch: ""})}
+                    hx-target="#main-content"
+                    hx-swap="innerHTML"
+                    hx-push-url="true"
+                    >
                     <input id="search-input" name="search" class="h-8 w-full bg-transparent text-gray-600 placeholder-gray-400 focus:outline-none dark:text-gray-200 dark:placeholder-gray-500"
                      autocomplete="off" spellcheck="false" placeholder="Type a command or search…" value={pageData.Filters.Search}
                      minlength="3" maxlength="100"
@@ -25,7 +30,7 @@ templ SearchBar(categories []*models.Category, pageData models.PostsListPageData
                             <li class="flex-1 text-center">
                                 <button
                                     class="flex items-center justify-center w-full px-0 py-1 mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-primary-500 dark:text-primary-500 bg-inherit"
-                                    hx-get={ pageData.SetCategory("").GetLink() }
+                                    hx-get={ pageData.GetLink(map[string]string{models.URICategory:""}) }
                                     hx-trigger="click"
                                     hx-target="#main-content"
                                     hx-swap="innerHTML"
@@ -38,7 +43,7 @@ templ SearchBar(categories []*models.Category, pageData models.PostsListPageData
                             <li class="flex-1 text-center">
                                 <button
                                     class="flex items-center justify-center w-full px-0 py-1 mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-gray-600 dark:text-gray-200 bg-inherit hover:text-primary-500"
-                                    hx-get={ pageData.SetCategory(item.Slug).GetLink() }
+                                    hx-get={ pageData.GetLink(map[string]string{models.URICategory:item.Slug}) }
                                     hx-trigger="click"
                                     hx-target="#main-content"
                                     hx-swap="innerHTML"

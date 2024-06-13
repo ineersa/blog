@@ -18,12 +18,12 @@ func NewTagsModel(database *sql.DB) *TagsModel {
 
 type TagWithCount struct {
 	Tag      Tag  `json:"tag"`
-	Count    int  `json:"count" db:"count"`
+	Count    int  `json:"count"    db:"count"`
 	Selected bool `json:"selected"`
 }
 
 type Tag struct {
-	ID   int64  `json:"id" db:"id"`
+	ID   int64  `json:"id"   db:"id"`
 	Name string `json:"name" db:"name"`
 	Slug string `json:"slug" db:"slug"`
 }
@@ -32,13 +32,13 @@ func (model *TagsModel) GetTagsDictionary() (map[int]Tag, error) {
 	tagsDictionary := make(map[int]Tag)
 	rows, err := model.database.Query("SELECT id, name, slug FROM tags")
 	if err != nil {
-		return nil, fmt.Errorf("GetTagsDictionary error: %v", err)
+		return nil, fmt.Errorf("GetTagsDictionary error: %w", err)
 	}
 
 	defer func(rows *sql.Rows) {
 		err := rows.Close()
 		if err != nil {
-			slog.Error("error closing rows: %v", err)
+			slog.Error("error closing rows", "error", err.Error())
 		}
 	}(rows)
 
@@ -49,7 +49,7 @@ func (model *TagsModel) GetTagsDictionary() (map[int]Tag, error) {
 			&tag.Name,
 			&tag.Slug,
 		); err != nil {
-			return nil, fmt.Errorf("error scanning row: %v", err)
+			return nil, fmt.Errorf("error scanning row: %w", err)
 		}
 		tagsDictionary[int(tag.ID)] = tag
 	}
@@ -58,14 +58,14 @@ func (model *TagsModel) GetTagsDictionary() (map[int]Tag, error) {
 }
 
 // GetTagsWithCount retrieves tags and count of posts for them, as a return it gives back json.Marshal(tagsWithCount)
-func (model *TagsModel) GetTagsWithCount(RequestURI string) ([]*TagWithCount, error) {
+func (model *TagsModel) GetTagsWithCount(requestURI string) ([]*TagWithCount, error) {
 	var tagsWithCount []*TagWithCount
 	selectedTags := make(map[string]bool)
-	parsedURI, err := url.ParseRequestURI(RequestURI)
+	parsedURI, err := url.ParseRequestURI(requestURI)
 	if err == nil {
 		values := parsedURI.Query()
 		tags := values.Get("tags")
-		if len(tags) > 0 {
+		if tags != "" {
 			for _, slug := range strings.Split(tags, ",") {
 				selectedTags[slug] = true
 			}
@@ -83,12 +83,12 @@ func (model *TagsModel) GetTagsWithCount(RequestURI string) ([]*TagWithCount, er
 			) AS tags_counts ON t.id=tags_counts.tag_id
 		`)
 	if err != nil {
-		return nil, fmt.Errorf("GetTagsWithCount error: %v", err)
+		return nil, fmt.Errorf("GetTagsWithCount error: %w", err)
 	}
 	defer func(rows *sql.Rows) {
 		err := rows.Close()
 		if err != nil {
-			slog.Error("error closing rows: %v", err)
+			slog.Error("error closing rows", "error", err.Error())
 		}
 	}(rows)
 
@@ -105,7 +105,7 @@ func (model *TagsModel) GetTagsWithCount(RequestURI string) ([]*TagWithCount, er
 			&slug,
 			&cnt,
 		); err != nil {
-			return nil, fmt.Errorf("error scanning row: %v", err)
+			return nil, fmt.Errorf("error scanning row: %w", err)
 		}
 		tagsWithCount = append(tagsWithCount, &TagWithCount{
 			Tag: Tag{ID: id, Name: name, Slug: slug},
@@ -118,15 +118,12 @@ func (model *TagsModel) GetTagsWithCount(RequestURI string) ([]*TagWithCount, er
 			}(),
 			Selected: func() bool {
 				_, ok := selectedTags[slug]
-				if ok {
-					return true
-				}
-				return false
+				return ok
 			}(),
 		})
 	}
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("error scanning rows: %v", err)
+		return nil, fmt.Errorf("error scanning rows: %w", err)
 	}
 
 	return tagsWithCount, nil

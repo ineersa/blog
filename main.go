@@ -2,12 +2,13 @@ package main
 
 import (
 	"database/sql"
-	"github.com/go-sql-driver/mysql"
-	"github.com/ineersa/blog/models"
-	"github.com/joho/godotenv"
 	"log"
 	"log/slog"
 	"os"
+
+	"github.com/go-sql-driver/mysql"
+	"github.com/ineersa/blog/models"
+	"github.com/joho/godotenv"
 )
 
 func main() {

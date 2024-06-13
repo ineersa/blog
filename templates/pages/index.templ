@@ -8,7 +8,7 @@ import "github.com/ineersa/blog/structs"
 templ IndexBodyContent(
     categories []*models.Category,
     postsList []*models.PostsListItem,
-    pageData models.PostsListPageData,
+    pageData *models.PostsListPageData,
     tagsWithCount []*models.TagWithCount,
     metadata structs.Metadata,
 ) {

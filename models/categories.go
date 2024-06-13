@@ -15,7 +15,7 @@ func NewCategoriesModel(database *sql.DB) *CategoriesModel {
 }
 
 type Category struct {
-	ID   int    `json:"id" db:"id"`
+	ID   int    `json:"id"   db:"id"`
 	Name string `json:"name" db:"name"`
 	Slug string `json:"slug" db:"slug"`
 }
@@ -24,13 +24,13 @@ func (model *CategoriesModel) GetCategoriesDictionary() (map[int]Category, error
 	categoriesDictionary := make(map[int]Category)
 	rows, err := model.database.Query("SELECT id, name, slug FROM categories")
 	if err != nil {
-		return nil, fmt.Errorf("get categories dict error: %v", err)
+		return nil, fmt.Errorf("get categories dict error: %w", err)
 	}
 
 	defer func(rows *sql.Rows) {
 		err := rows.Close()
 		if err != nil {
-			slog.Error("error closing rows: %v", err)
+			slog.Info("error closing rows: %w", "error", err.Error())
 		}
 	}(rows)
 
@@ -41,9 +41,9 @@ func (model *CategoriesModel) GetCategoriesDictionary() (map[int]Category, error
 			&category.Name,
 			&category.Slug,
 		); err != nil {
-			return nil, fmt.Errorf("error scanning row: %v", err)
+			return nil, fmt.Errorf("error scanning row: %w", err)
 		}
-		categoriesDictionary[int(category.ID)] = category
+		categoriesDictionary[category.ID] = category
 	}
 
 	return categoriesDictionary, nil
@@ -55,13 +55,13 @@ func (model *CategoriesModel) GetCategories() ([]*Category, error) {
 	rows, err := model.database.Query(
 		`SELECT id, name, slug FROM categories`)
 	if err != nil {
-		return nil, fmt.Errorf("GetTagsWithCount error: %v", err)
+		return nil, fmt.Errorf("GetTagsWithCount error: %w", err)
 	}
 
 	defer func(rows *sql.Rows) {
 		err := rows.Close()
 		if err != nil {
-			slog.Error("error closing rows: %v", err)
+			slog.Info("error closing rows", "error", err.Error())
 		}
 	}(rows)
 
@@ -73,7 +73,7 @@ func (model *CategoriesModel) GetCategories() ([]*Category, error) {
 		)
 		err := rows.Scan(&id, &name, &slug)
 		if err != nil {
-			return nil, fmt.Errorf("error scanning row: %v", err)
+			return nil, fmt.Errorf("error scanning row: %w", err)
 		}
 		categories = append(categories, &Category{
 			ID:   int(id),
@@ -82,7 +82,7 @@ func (model *CategoriesModel) GetCategories() ([]*Category, error) {
 		})
 	}
 	if err := rows.Err(); err != nil {
-		return nil, fmt.Errorf("error scanning rows: %v", err)
+		return nil, fmt.Errorf("error scanning rows: %w", err)
 	}
 
 	return categories, nil

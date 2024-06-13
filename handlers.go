@@ -3,6 +3,10 @@ package main
 import (
 	"database/sql"
 	"errors"
+	"log/slog"
+	"net/http"
+	"strings"
+
 	"github.com/a-h/templ"
 	"github.com/angelofallars/htmx-go"
 	"github.com/ineersa/blog/models"
@@ -10,9 +14,6 @@ import (
 	"github.com/ineersa/blog/templates"
 	"github.com/ineersa/blog/templates/pages"
 	"github.com/ineersa/blog/templates/partials"
-	"log/slog"
-	"net/http"
-	"strings"
 )
 
 // indexViewHandler handles a view for the index page.
@@ -26,20 +27,20 @@ func (s *Server) indexViewHandler(w http.ResponseWriter, r *http.Request) {
 
 	categories, err := s.categoriesModel.GetCategories()
 	if err != nil {
-		slog.Error("get categories error", err)
+		slog.Error("get categories error", "error", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	pageData := models.NewPostsListPageData(r.RequestURI)
-	postsList, pageData, err := s.postsModel.GetPostsList(pageData)
+	postsList, err := s.postsModel.GetPostsList(pageData)
 	if err != nil {
-		slog.Error("get posts error", err)
+		slog.Error("get posts error", "error", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	tagsWithCounts, err := s.tagsModel.GetTagsWithCount(r.RequestURI)
 	if err != nil {
-		slog.Error("get tags with count error:", err)
+		slog.Error("get tags with count error:", "error", err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -106,12 +107,12 @@ func (s *Server) blogPostViewHandler(w http.ResponseWriter, r *http.Request) {
 	post, err := s.postsModel.GetPostDetails(slug)
 
 	if errors.Is(err, sql.ErrNoRows) {
-		slog.Error("Not found error", err)
+		slog.Error("Not found error", "error", err)
 		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 	if err != nil {
-		slog.Error("get post details error", err)
+		slog.Error("get post details error", "error", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

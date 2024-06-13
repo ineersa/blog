@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
-	"github.com/ineersa/blog/models"
 	"log/slog"
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/ineersa/blog/models"
 
 	gowebly "github.com/gowebly/helpers"
 )

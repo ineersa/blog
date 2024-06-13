@@ -1,10 +1,10 @@
 package partials
 
-import "github.com/ineersa/blog/models"
 import "fmt"
 import "strconv"
 import "strings"
 import "time"
+import "github.com/ineersa/blog/models"
 
 func getTagsString(tagsWithCount []*models.TagWithCount) string {
     var tagSlugs []string
@@ -33,11 +33,12 @@ script toggleTag(tag string) {
     } else {
         slugSet.add(tag);
     }
+    console.log(slugSet);
     tagsInput.value = [...slugSet].join(',');
     window.htmx.trigger(tagsInput.closest('form'), 'submit');
 }
 
-templ ListBlogPosts(postsList []*models.PostsListItem, pageData models.PostsListPageData, tagsWithCount []*models.TagWithCount) {
+templ ListBlogPosts(postsList []*models.PostsListItem, pageData *models.PostsListPageData, tagsWithCount []*models.TagWithCount) {
     <div class="flex mt-4 min-w-64 max-w-64 h-full max-h-screen overflow-auto flex-wrap pt-5 hidden md:block">
         <div class="px-6 divide-y divide-gray-200 dark:divide-gray-700">
             <h2 class="font-bold uppercase text-gray-700 dark:text-gray-300 py-2">Tags</h2>
@@ -53,7 +54,11 @@ templ ListBlogPosts(postsList []*models.PostsListItem, pageData models.PostsList
                 }
             </ul>
         </div>
-        <form id="tags-form" hx-get={pageData.SetTags("").GetLink()} hx-target="#main-content" hx-swap="innerHTML" hx-push-url="true"
+        <form id="tags-form"
+            hx-get={pageData.GetLink(map[string]string{models.URITags:""})}
+            hx-target="#main-content"
+            hx-swap="innerHTML"
+            hx-push-url="true"
                         >
             <input type="hidden" id="tags-input" name="tags" value={ getTagsString(tagsWithCount) }>
         </form>
@@ -124,7 +129,7 @@ templ ListBlogPosts(postsList []*models.PostsListItem, pageData models.PostsList
                                         <div class="flex flex-wrap py-2">
                                             for _, tagItem := range item.Tags {
                                                 <a class="mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 cursor-pointer"
-                                                    hx-get={ pageData.SetTags(tagItem.Slug).GetLink() }
+                                                    hx-get={ pageData.GetLink(map[string]string{models.URITags:tagItem.Slug}) }
                                                     hx-trigger="click"
                                                     hx-target="#main-content"
                                                     hx-swap="innerHTML"
@@ -155,7 +160,7 @@ templ ListBlogPosts(postsList []*models.PostsListItem, pageData models.PostsList
                 <nav class="flex justify-between">
                     if pageData.Pagination.Page > 1 {
                         <button class="flex items-center justify-center px-4 py-2 mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-gray-600 dark:text-gray-200 bg-inherit hover:text-primary-500"
-                            hx-get={ pageData.SetPage(pageData.Pagination.Page - 1).GetLink() }
+                            hx-get={ pageData.GetLink(map[string]string{models.URIPage: strconv.Itoa(pageData.Pagination.Page - 1)}) }
                             hx-trigger="click"
                             hx-target="#main-content"
                             hx-swap="innerHTML"
@@ -167,7 +172,7 @@ templ ListBlogPosts(postsList []*models.PostsListItem, pageData models.PostsList
                     <span class="flex items-center justify-center px-4 py-2 mb-0">{ strconv.Itoa(pageData.Pagination.Page) } of {strconv.Itoa(pageData.Pagination.PagesCount)}</span>
                     if pageData.Pagination.Page < pageData.Pagination.PagesCount {
                         <button class="flex items-center justify-center px-4 py-2 mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-gray-600 dark:text-gray-200 bg-inherit hover:text-primary-500"
-                            hx-get={ pageData.SetPage(pageData.Pagination.Page + 1).GetLink() }
+                            hx-get={ pageData.GetLink(map[string]string{models.URIPage: strconv.Itoa(pageData.Pagination.Page + 1)})}
                             hx-trigger="click"
                             hx-target="#main-content"
                             hx-swap="innerHTML"
