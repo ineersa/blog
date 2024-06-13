@@ -11,9 +11,6 @@ window.hljs = hljs
 
 hljs.highlightAll()
 
-// Start Alpine.
-Alpine.start()
-
 window.getSystemThemeName = function() {
     let t = '(prefers-color-scheme: dark)',
         m = window.matchMedia(t);
@@ -34,19 +31,35 @@ window.changeTheme = function() {
             if (getSystemThemeName() === 'dark') {
                 d.style.colorScheme = 'dark';
                 c.add('dark')
+                localStorage.setItem('theme', 'dark');
             } else {
                 d.style.colorScheme = 'light';
                 c.add('light')
+                localStorage.setItem('theme', 'dark');
             }
         } else if (e) {
-            c.add(e || '')
+            c.add(e || 'dark')
+            localStorage.setItem('theme', e || 'dark');
         }
         if (e === 'light' || e === 'dark') d.style.colorScheme = e
-    } catch (e) {}
+    } catch (e) {
+        console.error(e);
+    }
+    return localStorage.getItem('theme');
 }
 
 window.metaData = {}
 
-!function() {
+const domReady = (callback) => {
+    document.readyState === 'interactive' || document.readyState === 'complete'
+        ? callback()
+        : document.addEventListener('DOMContentLoaded', callback);
+};
+
+domReady(() => {
+    // Display body when DOM is loaded
+    document.body.style.visibility = 'visible';
     changeTheme();
-}()
+    // Start Alpine.
+    Alpine.start();
+});

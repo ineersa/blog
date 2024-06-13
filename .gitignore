@@ -42,6 +42,7 @@ lerna-debug.log*
 static/scripts.js
 static/scripts.js.map
 static/styles.css
+static/styles.css.map
 
 # Ignore by extensions.
 *.exe
