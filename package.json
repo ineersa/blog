@@ -22,9 +22,10 @@
   "dependencies": {
     "@tailwindcss/forms": "latest",
     "@tailwindcss/typography": "latest",
-    "tailwindcss": "latest",
     "alpinejs": "latest",
-    "htmx.org": "latest"
+    "highlight.js": "^11.9.0",
+    "htmx.org": "latest",
+    "tailwindcss": "latest"
   },
   "devDependencies": {
     "@parcel/transformer-sass": "latest",

@@ -2,10 +2,14 @@ import 'htmx.org'
 
 import Alpine from 'alpinejs'
 import * as htmx from "htmx.org";
+import * as hljs from "highlight.js/lib/common"
 
 // Add Alpine instance to window object.
 window.Alpine = Alpine
 window.htmx = htmx
+window.hljs = hljs
+
+hljs.highlightAll()
 
 // Start Alpine.
 Alpine.start()

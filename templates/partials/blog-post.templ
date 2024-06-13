@@ -19,7 +19,7 @@ func parseMarkdown(content string) string {
 
 templ BlogPostBodyContent(postData models.BlogPostData, metadata structs.Metadata) {
     @Metadata(metadata)
-    <section class="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-7xl xl:px-0">
+    <section class="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-7xl xl:px-0" x-on:htmx:after-settle.window="hljs.highlightAll()">
         <article>
             <div class="xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700">
                 <header class="pt-6 xl:pb-6">
