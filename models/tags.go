@@ -81,6 +81,7 @@ func (model *TagsModel) GetTagsWithCount(requestURI string) ([]*TagWithCount, er
 				FROM posts_tags AS pt
 				GROUP BY pt.tag_id
 			) AS tags_counts ON t.id=tags_counts.tag_id
+			ORDER BY tags_counts.cnt DESC
 		`)
 	if err != nil {
 		return nil, fmt.Errorf("GetTagsWithCount error: %w", err)
