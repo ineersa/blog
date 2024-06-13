@@ -19,7 +19,7 @@ func parseMarkdown(content string) string {
 
 templ BlogPostBodyContent(postData models.BlogPostData, metadata structs.Metadata) {
     @Metadata(metadata)
-    <section class="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-7xl xl:px-0" x-on:htmx:after-settle.window="hljs.highlightAll()">
+    <section class="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-6xl xl:px-0" x-on:htmx:after-settle.window="hljs.highlightAll()">
         <article>
             <div class="xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700">
                 <header class="pt-6 xl:pb-6">
@@ -41,7 +41,7 @@ templ BlogPostBodyContent(postData models.BlogPostData, metadata structs.Metadat
                 </header>
                 <div class="grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 dark:divide-gray-700 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0">
                     <dl class="pb-10 pt-6 xl:border-b xl:border-gray-200 xl:pt-11 xl:dark:border-gray-700">
-                        <dt class="sr-only">Authors</dt>
+                        <dt class="sr-only">Author</dt>
                         <dd>
                             <ul class="flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8">
                                 <li class="flex items-center space-x-2">
@@ -76,11 +76,10 @@ templ BlogPostBodyContent(postData models.BlogPostData, metadata structs.Metadat
                                     <div class="flex flex-wrap">
                                         for _, tag := range postData.Tags {
                                             <a class="cursor-pointer mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                                               hx-get={ string(templ.URL(fmt.Sprintf("/tags=%s", tag.Slug))) }
+                                               hx-get={ string(templ.URL(fmt.Sprintf("/?tags=%s", tag.Slug))) }
                                                hx-trigger="click"
-                                               hx-indicator="#spinner-overlay"
                                                hx-target="#main-content"
-                                               hx-swap="innerHTML"
+                                               hx-swap="innerHTML transition:true"
                                                hx-push-url="true"
                                             >{tag.Name}</a>
                                         }
@@ -95,9 +94,8 @@ templ BlogPostBodyContent(postData models.BlogPostData, metadata structs.Metadat
                                             <a hx-get={ string(templ.URL(fmt.Sprintf("/post/%s", postData.NextArticle.ArticleInfo.Slug))) }
                                                href={ templ.URL(fmt.Sprintf("/post/%s", postData.NextArticle.ArticleInfo.Slug)) }
                                                hx-trigger="click"
-                                               hx-indicator="#spinner-overlay"
                                                hx-target="#main-content"
-                                               hx-swap="innerHTML"
+                                               hx-swap="innerHTML transition:true"
                                                hx-push-url="true">{postData.NextArticle.ArticleInfo.Title}</a>
                                         </div>
                                     </div>
@@ -111,9 +109,8 @@ templ BlogPostBodyContent(postData models.BlogPostData, metadata structs.Metadat
                                             <a hx-get={ string(templ.URL(fmt.Sprintf("/post/%s", postData.PreviousArticle.ArticleInfo.Slug))) }
                                                href={ templ.URL(fmt.Sprintf("/post/%s", postData.PreviousArticle.ArticleInfo.Slug)) }
                                                hx-trigger="click"
-                                               hx-indicator="#spinner-overlay"
                                                hx-target="#main-content"
-                                               hx-swap="innerHTML"
+                                               hx-swap="innerHTML transition:true"
                                                hx-push-url="true">{postData.PreviousArticle.ArticleInfo.Title}</a>
                                         </div>
                                     </div>
@@ -126,9 +123,8 @@ templ BlogPostBodyContent(postData models.BlogPostData, metadata structs.Metadat
                             hx-get="/"
                             href="/"
                             hx-trigger="click"
-                            hx-indicator="#spinner-overlay"
                             hx-target="#main-content"
-                            hx-swap="innerHTML"
+                            hx-swap="innerHTML transition:true"
                             hx-push-url="true">
                                 ← Back to the blog
                             </a>

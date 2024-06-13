@@ -25,9 +25,9 @@ templ Layout(metadata structs.Metadata, bodyContent templ.Component) {
 			<link href="/static/styles.css" rel="stylesheet"/>
 		</head>
 		<noscript><style>body { visibility: visible; }</style></noscript>
-		<body class="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-7xl xl:px-0" style="visibility: hidden;">
+		<body class="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-6xl xl:px-0" style="visibility: hidden;">
 		    <script>0</script>
-		    <section class="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-7xl xl:px-0">
+		    <section class="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-6xl xl:px-0">
 		        <div class="flex h-screen flex-col justify-between font-sans">
 		            <header class="flex items-center justify-between py-10">
                         @header()
@@ -38,7 +38,7 @@ templ Layout(metadata structs.Metadata, bodyContent templ.Component) {
                             <span class="sr-only">Loading...</span>
                         </div>
                     </div>
-		            <main class="mb-auto" id="main-content" hx-history-elt="">
+		            <main class="mb-auto slide-transition" id="main-content" hx-history-elt="">
 		                @bodyContent
 		            </main>
                     <footer>

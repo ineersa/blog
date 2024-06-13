@@ -5,6 +5,9 @@
 
 html[style*="color-scheme: light;"] {
   @include meta.load-css("highlight.js/styles/atom-one-light.css");
+  .hljs {
+    background: beige;
+  }
 }
 html[style*="color-scheme: dark;"] {
   @include meta.load-css("highlight.js/styles/atom-one-dark.css");
@@ -90,4 +93,33 @@ input:-webkit-autofill:focus {
 
 .scale-100 {
     transform: scale(1);
+}
+
+
+@keyframes fade-in {
+  from { opacity: 0; }
+}
+
+@keyframes fade-out {
+  to { opacity: 0; }
+}
+
+@keyframes slide-from-right {
+  from { transform: translateX(90px); }
+}
+
+@keyframes slide-to-left {
+  to { transform: translateX(-90px); }
+}
+
+::view-transition-old(slide-it) {
+  animation: 180ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
+  500ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+}
+::view-transition-new(slide-it) {
+  animation: 420ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+  500ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+}
+.slide-transition {
+  view-transition-name: slide-it;
 }

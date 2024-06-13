@@ -20,9 +20,8 @@ templ header() {
         <button class="font-medium flex items-center justify-center px-2 py-2 mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-gray-600 dark:text-gray-200 bg-inherit hover:text-primary-500"
         hx-get="/"
         hx-trigger="click"
-        hx-indicator="#spinner-overlay"
         hx-target="#main-content"
-        hx-swap="innerHTML"
+        hx-swap="innerHTML transition:true"
         hx-push-url="true"
         >
         Blog
@@ -30,9 +29,8 @@ templ header() {
         <button class="font-medium flex items-center justify-center px-2 py-2 mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-gray-600 dark:text-gray-200 bg-inherit hover:text-primary-500"
         hx-get="/about"
         hx-trigger="click"
-        hx-indicator="#spinner-overlay"
         hx-target="#main-content"
-        hx-swap="innerHTML"
+        hx-swap="innerHTML transition:true"
         hx-push-url="true"
         >
         About
