@@ -7,21 +7,21 @@ import "time"
 import "github.com/ineersa/blog/models"
 
 func getTagsString(tagsWithCount []*models.TagWithCount) string {
-    var tagSlugs []string
-    for _, item := range(tagsWithCount) {
-        if item.Selected {
-            tagSlugs = append(tagSlugs, item.Tag.Slug)
-        }
-    }
-    return strings.Join(tagSlugs, ",")
+	var tagSlugs []string
+	for _, item := range tagsWithCount {
+		if item.Selected {
+			tagSlugs = append(tagSlugs, item.Tag.Slug)
+		}
+	}
+	return strings.Join(tagSlugs, ",")
 }
 
 func getTagClass(item *models.TagWithCount) string {
-    if (item.Selected) {
-        return "cursor-pointer py-1 text-sm font-medium uppercase text-primary-500 dark:text-primary-500 hover:text-gray-500 dark:hover:text-primary-500"
-    } else {
-        return "cursor-pointer py-1 text-sm font-medium uppercase text-gray-500 hover:text-primary-500 dark:text-gray-300 dark:hover:text-primary-500"
-    }
+	if item.Selected {
+		return "cursor-pointer py-1 text-sm font-medium uppercase text-primary-500 dark:text-primary-500 hover:text-gray-500 dark:hover:text-primary-500"
+	} else {
+		return "cursor-pointer py-1 text-sm font-medium uppercase text-gray-500 hover:text-primary-500 dark:text-gray-300 dark:hover:text-primary-500"
+	}
 }
 
 script toggleTag(tag string) {
@@ -39,151 +39,157 @@ script toggleTag(tag string) {
 }
 
 templ ListBlogPosts(postsList []*models.PostsListItem, pageData *models.PostsListPageData, tagsWithCount []*models.TagWithCount) {
-    <div class="flex mt-4 min-w-64 max-w-64 h-full max-h-screen overflow-auto flex-wrap pt-5 hidden md:block">
-        <div class="px-6 divide-y divide-gray-200 dark:divide-gray-700">
-            <h2 class="font-bold uppercase text-gray-700 dark:text-gray-300 py-2">Tags</h2>
-            <ul>
-                for _, item := range tagsWithCount {
-                    <li class="my-3 px-4">
-                        <a
-                           class={getTagClass(item)}
-                           onclick={ toggleTag(item.Tag.Slug) }
-                           >{ item.Tag.Name }</a>
-                        <span class="text-sm font-semibold uppercase text-gray-600 dark:text-gray-300">({ strconv.Itoa(item.Count) })</span>
-                    </li>
-                }
-            </ul>
-        </div>
-        <form id="tags-form"
-            hx-get={pageData.GetLink(map[string]string{models.URITags:""})}
-            hx-target="#main-content"
-            hx-swap="innerHTML"
-            hx-push-url="true"
-                        >
-            <input type="hidden" id="tags-input" name="tags" value={ getTagsString(tagsWithCount) }>
-        </form>
-    </div>
-    <div class="flex md:ml-8 px-4 sm:px-6 xl:px-0 w-full">
-    if len(postsList) == 0 {
-        <div class="w-full">
-            <button @click="showTagsMobile = !showTagsMobile" class="mt-8 bg-gray-50 dark:bg-gray-900/70 text-gray-500 dark:text-gray-300 p-2 rounded md:hidden w-full">Toggle Tags</button>
-            <div id="tags-mobile" x-show="showTagsMobile" x-cloak x-transition class="md:hidden w-full bg-gray-50 dark:bg-gray-900/70 text-gray-500 dark:text-gray-300 p-4">
-                <div class="px-6">
-                    <ul>
-                        for _, item := range tagsWithCount {
-                            <li class="my-3">
-                                <a
-                                   class={getTagClass(item)}
-                                   onclick={ toggleTag(item.Tag.Slug) }
-                                   >{ item.Tag.Name }</a>
-                                <span class="-ml-2 text-sm font-semibold uppercase text-gray-600 dark:text-gray-300">{ strconv.Itoa(item.Count) }</span>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            </div>
-            <div class="text-center mt-4 text-gray-500 min-h-8 w-full">Nothing found...</div>
-        </div>
-    } else {
-        <div class="w-full">
-            <button @click="showTagsMobile = !showTagsMobile" class="mt-8 bg-gray-50 dark:bg-gray-900/70 text-gray-500 dark:text-gray-300 p-2 rounded md:hidden w-full">Toggle Tags</button>
-            <div id="tags-mobile" x-show="showTagsMobile" x-cloak x-transition class="md:hidden w-full bg-gray-50 dark:bg-gray-900/70 text-gray-500 dark:text-gray-300 p-4">
-                <div class="px-6">
-                    <ul>
-                        for _, item := range tagsWithCount {
-                            <li class="my-3">
-                                <a
-                                   class={getTagClass(item)}
-                                   onclick={ toggleTag(item.Tag.Slug) }
-                                   >{ item.Tag.Name }</a>
-                                <span class="-ml-2 text-sm font-semibold uppercase text-gray-600 dark:text-gray-300">{ strconv.Itoa(item.Count) }</span>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            </div>
-            <ul class="w-full">
-                for _, item := range postsList {
-                    <li class="py-10 border-b-2 border-b-gray-200 dark:border-b-gray-700">
-                        <article>
-                            <div class="xl:flex xl:items-start xl:space-x-4">
-                                <div class="flex flex-col items-center xl:items-start">
-                                    <img src={item.Post.GetThumbnailLink()} class="max-w-60" alt="Picture">
-                                    <span class="mt-2 text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                                        <time datetime={item.Post.PublishedAt.Format(time.RFC3339)}>{item.Post.PublishedAt.Format("January 2, 2006")}</time>
-                                    </span>
-                                </div>
-                                <div class="mt-4 xl:mt-0 xl:flex-1">
-                                    <div class="space-y-6">
-                                    <div>
-                                        <h2 class="text-2xl font-bold leading-8 tracking-tight">
-                                            <a class="text-gray-900 dark:text-gray-100 cursor-pointer"
-                                                hx-get={ string(templ.URL(fmt.Sprintf("/post/%s", item.Post.Slug)))}
-                                                hx-trigger="click"
-                                                hx-target="#main-content"
-                                                hx-swap="innerHTML transition:true"
-                                                hx-push-url="true"
-                                                href={ templ.URL(fmt.Sprintf("/post/%s", item.Post.Slug))}
-                                            >{ item.Post.Title }</a>
-                                        </h2>
-                                        <div class="flex flex-wrap py-2">
-                                            for _, tagItem := range item.Tags {
-                                                <a class="mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 cursor-pointer"
-                                                    hx-get={ pageData.GetLink(map[string]string{models.URITags:tagItem.Slug}) }
-                                                    hx-trigger="click"
-                                                    hx-target="#main-content"
-                                                    hx-swap="innerHTML"
-                                                    hx-push-url="true"
-                                                    >{ tagItem.Name }</a>
-                                            }
-                                        </div>
-                                    </div>
-                                    <div class="prose max-w-none py-2 text-gray-500 dark:text-gray-400">{item.Post.ShortDescription}</div>
-                                    </div>
-                                    <div class="text-base font-medium leading-6">
-                                        <a class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 cursor-pointer"
-                                            hx-get={ string(templ.URL(fmt.Sprintf("/post/%s", item.Post.Slug))) }
-                                            hx-trigger="click"
-                                            hx-target="#main-content"
-                                            hx-swap="innerHTML transition:true"
-                                            hx-push-url="true"
-                                            href={ templ.URL(fmt.Sprintf("/post/%s", item.Post.Slug))}
-                                        >Read more →</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                    </li>
-                }
-            </ul>
-            <div class="w-full space-y-2 pb-8 pt-6 md:space-y-5">
-                <nav class="flex justify-between">
-                    if pageData.Pagination.Page > 1 {
-                        <button class="flex items-center justify-center px-4 py-2 mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-gray-600 dark:text-gray-200 bg-inherit hover:text-primary-500"
-                            hx-get={ pageData.GetLink(map[string]string{models.URIPage: strconv.Itoa(pageData.Pagination.Page - 1)}) }
-                            hx-trigger="click"
-                            hx-target="#main-content"
-                            hx-swap="innerHTML"
-                            hx-push-url="true"
-                        >Previous</button>
-                    } else {
-                        <button class="cursor-auto disabled:opacity-50" disabled="">Previous</button>
-                    }
-                    <span class="flex items-center justify-center px-4 py-2 mb-0">{ strconv.Itoa(pageData.Pagination.Page) } of {strconv.Itoa(pageData.Pagination.PagesCount)}</span>
-                    if pageData.Pagination.Page < pageData.Pagination.PagesCount {
-                        <button class="flex items-center justify-center px-4 py-2 mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-gray-600 dark:text-gray-200 bg-inherit hover:text-primary-500"
-                            hx-get={ pageData.GetLink(map[string]string{models.URIPage: strconv.Itoa(pageData.Pagination.Page + 1)})}
-                            hx-trigger="click"
-                            hx-target="#main-content"
-                            hx-swap="innerHTML"
-                            hx-push-url="true"
-                        >Next</button>
-                    } else {
-                        <button class="cursor-auto disabled:opacity-50" disabled="">Next</button>
-                    }
-                </nav>
-            </div>
-        </div>
-    }
-    </div>
+	<div class="flex mt-4 min-w-64 max-w-64 h-full max-h-screen overflow-auto flex-wrap pt-5 hidden md:block">
+		<div class="px-6 divide-y divide-gray-200 dark:divide-gray-700">
+			<h2 class="font-bold uppercase text-gray-700 dark:text-gray-300 py-2">Tags</h2>
+			<ul>
+				for _, item := range tagsWithCount {
+					<li class="my-3 px-4">
+						<a
+							class={ getTagClass(item) }
+							onclick={ toggleTag(item.Tag.Slug) }
+						>{ item.Tag.Name }</a>
+						<span class="text-sm font-semibold uppercase text-gray-600 dark:text-gray-300">({ strconv.Itoa(item.Count) })</span>
+					</li>
+				}
+			</ul>
+		</div>
+		<form
+			id="tags-form"
+			hx-get={ pageData.GetLink(map[string]string{models.URITags: ""}) }
+			hx-target="#main-content"
+			hx-swap="innerHTML"
+			hx-push-url="true"
+		>
+			<input type="hidden" id="tags-input" name="tags" value={ getTagsString(tagsWithCount) }/>
+		</form>
+	</div>
+	<div class="flex md:ml-8 px-4 sm:px-6 xl:px-0 w-full">
+		if len(postsList) == 0 {
+			<div class="w-full">
+				<button @click="showTagsMobile = !showTagsMobile" class="mt-8 bg-gray-50 dark:bg-gray-900/70 text-gray-500 dark:text-gray-300 p-2 rounded md:hidden w-full">Toggle Tags</button>
+				<div id="tags-mobile" x-show="showTagsMobile" x-cloak x-transition class="md:hidden w-full bg-gray-50 dark:bg-gray-900/70 text-gray-500 dark:text-gray-300 p-4">
+					<div class="px-6">
+						<ul>
+							for _, item := range tagsWithCount {
+								<li class="my-3">
+									<a
+										class={ getTagClass(item) }
+										onclick={ toggleTag(item.Tag.Slug) }
+									>{ item.Tag.Name }</a>
+									<span class="-ml-2 text-sm font-semibold uppercase text-gray-600 dark:text-gray-300">{ strconv.Itoa(item.Count) }</span>
+								</li>
+							}
+						</ul>
+					</div>
+				</div>
+				<div class="text-center mt-4 text-gray-500 min-h-8 w-full">Nothing found...</div>
+			</div>
+		} else {
+			<div class="w-full">
+				<button @click="showTagsMobile = !showTagsMobile" class="mt-8 bg-gray-50 dark:bg-gray-900/70 text-gray-500 dark:text-gray-300 p-2 rounded md:hidden w-full">Toggle Tags</button>
+				<div id="tags-mobile" x-show="showTagsMobile" x-cloak x-transition class="md:hidden w-full bg-gray-50 dark:bg-gray-900/70 text-gray-500 dark:text-gray-300 p-4">
+					<div class="px-6">
+						<ul>
+							for _, item := range tagsWithCount {
+								<li class="my-3">
+									<a
+										class={ getTagClass(item) }
+										onclick={ toggleTag(item.Tag.Slug) }
+									>{ item.Tag.Name }</a>
+									<span class="-ml-2 text-sm font-semibold uppercase text-gray-600 dark:text-gray-300">{ strconv.Itoa(item.Count) }</span>
+								</li>
+							}
+						</ul>
+					</div>
+				</div>
+				<ul class="w-full">
+					for _, item := range postsList {
+						<li class="py-10 border-b-2 border-b-gray-200 dark:border-b-gray-700">
+							<article>
+								<div class="xl:flex xl:items-start xl:space-x-4">
+									<div class="flex flex-col items-center xl:items-start">
+										<img src={ item.Post.GetThumbnailLink() } class="max-w-60" alt="Picture"/>
+										<span class="mt-2 text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+											<time datetime={ item.Post.PublishedAt.Format(time.RFC3339) }>{ item.Post.PublishedAt.Format("January 2, 2006") }</time>
+										</span>
+									</div>
+									<div class="mt-4 xl:mt-0 xl:flex-1">
+										<div class="space-y-6">
+											<div>
+												<h2 class="text-2xl font-bold leading-8 tracking-tight">
+													<a
+														class="text-gray-900 dark:text-gray-100 cursor-pointer"
+														hx-get={ string(templ.URL(fmt.Sprintf("/post/%s", item.Post.Slug))) }
+														hx-trigger="click"
+														hx-target="#main-content"
+														hx-swap="innerHTML transition:true"
+														hx-push-url="true"
+														href={ templ.URL(fmt.Sprintf("/post/%s", item.Post.Slug)) }
+													>{ item.Post.Title }</a>
+												</h2>
+												<div class="flex flex-wrap py-2">
+													for _, tagItem := range item.Tags {
+														<a
+															class="mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 cursor-pointer"
+															hx-get={ pageData.GetLink(map[string]string{models.URITags: tagItem.Slug}) }
+															hx-trigger="click"
+															hx-target="#main-content"
+															hx-swap="innerHTML"
+															hx-push-url="true"
+														>{ tagItem.Name }</a>
+													}
+												</div>
+											</div>
+											<div class="prose max-w-none py-2 text-gray-500 dark:text-gray-400">{ item.Post.ShortDescription }</div>
+										</div>
+										<div class="text-base font-medium leading-6">
+											<a
+												class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400 cursor-pointer"
+												hx-get={ string(templ.URL(fmt.Sprintf("/post/%s", item.Post.Slug))) }
+												hx-trigger="click"
+												hx-target="#main-content"
+												hx-swap="innerHTML transition:true"
+												hx-push-url="true"
+												href={ templ.URL(fmt.Sprintf("/post/%s", item.Post.Slug)) }
+											>Read more →</a>
+										</div>
+									</div>
+								</div>
+							</article>
+						</li>
+					}
+				</ul>
+				<div class="w-full space-y-2 pb-8 pt-6 md:space-y-5">
+					<nav class="flex justify-between">
+						if pageData.Pagination.Page > 1 {
+							<button
+								class="flex items-center justify-center px-4 py-2 mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-gray-600 dark:text-gray-200 bg-inherit hover:text-primary-500"
+								hx-get={ pageData.GetLink(map[string]string{models.URIPage: strconv.Itoa(pageData.Pagination.Page - 1)}) }
+								hx-trigger="click"
+								hx-target="#main-content"
+								hx-swap="innerHTML"
+								hx-push-url="true"
+							>Previous</button>
+						} else {
+							<button class="cursor-auto disabled:opacity-50" disabled="">Previous</button>
+						}
+						<span class="flex items-center justify-center px-4 py-2 mb-0">{ strconv.Itoa(pageData.Pagination.Page) } of { strconv.Itoa(pageData.Pagination.PagesCount) }</span>
+						if pageData.Pagination.Page < pageData.Pagination.PagesCount {
+							<button
+								class="flex items-center justify-center px-4 py-2 mb-0 transition-all ease-in-out border-0 rounded-lg cursor-pointer text-gray-600 dark:text-gray-200 bg-inherit hover:text-primary-500"
+								hx-get={ pageData.GetLink(map[string]string{models.URIPage: strconv.Itoa(pageData.Pagination.Page + 1)}) }
+								hx-trigger="click"
+								hx-target="#main-content"
+								hx-swap="innerHTML"
+								hx-push-url="true"
+							>Next</button>
+						} else {
+							<button class="cursor-auto disabled:opacity-50" disabled="">Next</button>
+						}
+					</nav>
+				</div>
+			</div>
+		}
+	</div>
 }
