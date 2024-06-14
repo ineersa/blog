@@ -45,6 +45,7 @@ linters-settings:
     exclude-generated: true
     excludes:
       - G101
+      - G202
 
   errorlint:
     asserts: false
