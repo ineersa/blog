@@ -12,27 +12,41 @@ permissions:
   pull-requests: read
 
 jobs:
-  generate-templ-code:
+  checkout:
+    name: checkout
     runs-on: self-hosted
-    permissions:
-      # Give the default GITHUB_TOKEN write permission to commit and push the
-      # added or changed files to the repository.
-      contents: write
-
     steps:
       - uses: actions/checkout@v4
-      # Format, generate and commit all changed .templ and generated .go files back to the repository
+
+  setup-go:
+    name: setup-go
+    runs-on: self-hosted
+    needs: checkout
+
+    steps:
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.22
+      - run: go version
+
+
+  generate-templ-code:
+    name: generate-templ-code
+    runs-on: self-hosted
+    needs: [checkout, setup-go]
+
+    steps:
       - name: Generate templ code
         uses: capthiron/templ-generator-action@v1
+        with:
+          commit: "false"
 
   golangci:
     name: lint
     runs-on: self-hosted
+    needs: [checkout, setup-go, generate-templ-code]
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v5
-        with:
-          go-version: 1.22
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v6
         with:
