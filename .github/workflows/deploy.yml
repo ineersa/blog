@@ -17,15 +17,13 @@ jobs:
     runs-on: self-hosted
     needs: run-pipeline
     steps:
-      - name: Connect to server
-        run: ssh root@ineersa.com
-      - name: Go to working directory
-        run: cd /var/www/blog.ineersa.com
-      - name: Git pull
-        run: git pull
-      - name: Build app
-        run: make build-all
-      - name: Restart service
-        run: systemctl restart blog.service
-      - name: Check status
-        run: systemctl status blog.service
+      - name: executing remote ssh commands using password
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          script: |
+            cd /var/www/blog.ineersa.com && git pull
+            make build-all
+            systemctl restart blog.service
+            systemctl status blog.service
