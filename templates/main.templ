@@ -17,34 +17,35 @@ templ Layout(metadata structs.Metadata, bodyContent templ.Component) {
 			<link rel="dns-prefetch" href="//fonts.gstatic.com"/>
 			<link rel="preconnect" href="//fonts.googleapis.com" crossorigin/>
 			<link rel="preconnect" href="//fonts.gstatic.com" crossorigin/>
-			<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
-            <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
-            <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png">
-            <link rel="manifest" href="/static/site.webmanifest">
+			<link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png"/>
+			<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png"/>
+			<link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16x16.png"/>
+			<link rel="manifest" href="/static/site.webmanifest"/>
 			<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"/>
 			<link href="/static/styles.css" rel="stylesheet"/>
 		</head>
-		<noscript><style>body { visibility: visible; }</style></noscript>
+		<noscript><style>body { visibility: visible; }</style>
+</noscript>
 		<body class="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-6xl xl:px-0" style="visibility: hidden;">
-		    <script>0</script>
-		    <section class="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-6xl xl:px-0">
-		        <div class="flex h-screen flex-col justify-between font-sans">
-		            <header class="flex items-center justify-between py-10">
-                        @header()
-		            </header>
-		            <div id="spinner-overlay" class="fixed inset-0 flex items-center justify-center bg-white dark:bg-gray-800 bg-opacity-50 htmx-indicator">
-                        <div role="status" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><rect width="6" height="14" x="1" y="4" fill="#3584e4"><animate id="svgSpinnersBarsScaleFade0" fill="freeze" attributeName="y" begin="0;svgSpinnersBarsScaleFade1.end-0.25s" dur="0.75s" values="1;5"/><animate fill="freeze" attributeName="height" begin="0;svgSpinnersBarsScaleFade1.end-0.25s" dur="0.75s" values="22;14"/><animate fill="freeze" attributeName="opacity" begin="0;svgSpinnersBarsScaleFade1.end-0.25s" dur="0.75s" values="1;0.2"/></rect><rect width="6" height="14" x="9" y="4" fill="#3584e4" opacity="0.4"><animate fill="freeze" attributeName="y" begin="svgSpinnersBarsScaleFade0.begin+0.15s" dur="0.75s" values="1;5"/><animate fill="freeze" attributeName="height" begin="svgSpinnersBarsScaleFade0.begin+0.15s" dur="0.75s" values="22;14"/><animate fill="freeze" attributeName="opacity" begin="svgSpinnersBarsScaleFade0.begin+0.15s" dur="0.75s" values="1;0.2"/></rect><rect width="6" height="14" x="17" y="4" fill="#3584e4" opacity="0.3"><animate id="svgSpinnersBarsScaleFade1" fill="freeze" attributeName="y" begin="svgSpinnersBarsScaleFade0.begin+0.3s" dur="0.75s" values="1;5"/><animate fill="freeze" attributeName="height" begin="svgSpinnersBarsScaleFade0.begin+0.3s" dur="0.75s" values="22;14"/><animate fill="freeze" attributeName="opacity" begin="svgSpinnersBarsScaleFade0.begin+0.3s" dur="0.75s" values="1;0.2"/></rect></svg>
-                            <span class="sr-only">Loading...</span>
-                        </div>
-                    </div>
-		            <main class="mb-auto slide-transition" id="main-content" hx-history-elt="">
-		                @bodyContent
-		            </main>
-                    <footer>
-                        @footer()
-                    </footer>
-		        </div>
+			<script>0</script>
+			<section class="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-6xl xl:px-0">
+				<div class="flex h-screen flex-col justify-between font-sans">
+					<header class="flex items-center justify-between py-10">
+						@header()
+					</header>
+					<div id="spinner-overlay" class="fixed inset-0 flex items-center justify-center bg-white dark:bg-gray-800 bg-opacity-50 htmx-indicator">
+						<div role="status" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+							<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24"><rect width="6" height="14" x="1" y="4" fill="#3584e4"><animate id="svgSpinnersBarsScaleFade0" fill="freeze" attributeName="y" begin="0;svgSpinnersBarsScaleFade1.end-0.25s" dur="0.75s" values="1;5"></animate><animate fill="freeze" attributeName="height" begin="0;svgSpinnersBarsScaleFade1.end-0.25s" dur="0.75s" values="22;14"></animate><animate fill="freeze" attributeName="opacity" begin="0;svgSpinnersBarsScaleFade1.end-0.25s" dur="0.75s" values="1;0.2"></animate></rect><rect width="6" height="14" x="9" y="4" fill="#3584e4" opacity="0.4"><animate fill="freeze" attributeName="y" begin="svgSpinnersBarsScaleFade0.begin+0.15s" dur="0.75s" values="1;5"></animate><animate fill="freeze" attributeName="height" begin="svgSpinnersBarsScaleFade0.begin+0.15s" dur="0.75s" values="22;14"></animate><animate fill="freeze" attributeName="opacity" begin="svgSpinnersBarsScaleFade0.begin+0.15s" dur="0.75s" values="1;0.2"></animate></rect><rect width="6" height="14" x="17" y="4" fill="#3584e4" opacity="0.3"><animate id="svgSpinnersBarsScaleFade1" fill="freeze" attributeName="y" begin="svgSpinnersBarsScaleFade0.begin+0.3s" dur="0.75s" values="1;5"></animate><animate fill="freeze" attributeName="height" begin="svgSpinnersBarsScaleFade0.begin+0.3s" dur="0.75s" values="22;14"></animate><animate fill="freeze" attributeName="opacity" begin="svgSpinnersBarsScaleFade0.begin+0.3s" dur="0.75s" values="1;0.2"></animate></rect></svg>
+							<span class="sr-only">Loading...</span>
+						</div>
+					</div>
+					<main class="mb-auto slide-transition" id="main-content" hx-history-elt="">
+						@bodyContent
+					</main>
+					<footer>
+						@footer()
+					</footer>
+				</div>
 			</section>
 			<script src="/static/scripts.js"></script>
 		</body>

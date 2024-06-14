@@ -7,131 +7,138 @@ import "github.com/yuin/goldmark"
 import "github.com/ineersa/blog/structs"
 
 func parseMarkdown(content string) string {
-    mdRenderer := goldmark.New()
-    var buf bytes.Buffer
-    err := mdRenderer.Convert([]byte(content), &buf)
-    if err != nil {
-        return ""
-    }
+	mdRenderer := goldmark.New()
+	var buf bytes.Buffer
+	err := mdRenderer.Convert([]byte(content), &buf)
+	if err != nil {
+		return ""
+	}
 
-    return buf.String()
+	return buf.String()
 }
 
 templ BlogPostBodyContent(postData models.BlogPostData, metadata structs.Metadata) {
-    @Metadata(metadata)
-    <section class="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-6xl xl:px-0" x-on:htmx:after-settle.window="hljs.highlightAll()">
-        <article>
-            <div class="xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700">
-                <header class="pt-6 xl:pb-6">
-                    <div class="space-y-1 text-center">
-                        <dl class="space-y-10">
-                            <div>
-                                <dt class="sr-only">Published on</dt>
-                                <dd class="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                                    <time datetime={postData.PublishedAt.Format(time.RFC3339)}>{postData.PublishedAt.Format("Monday, January 2, 2006")}</time>
-                                </dd>
-                            </div>
-                        </dl>
-                        <div>
-                            <h1 class="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-5xl md:leading-14">
-                                {postData.Title}
-                            </h1>
-                        </div>
-                    </div>
-                </header>
-                <div class="grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 dark:divide-gray-700 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0">
-                    <dl class="pb-10 pt-6 xl:border-b xl:border-gray-200 xl:pt-11 xl:dark:border-gray-700">
-                        <dt class="sr-only">Author</dt>
-                        <dd>
-                            <ul class="flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8">
-                                <li class="flex items-center space-x-2">
-                                    <img alt="avatar" loading="lazy" width="38" height="38" decoding="async" data-nimg="1" class="h-10 w-10 rounded-full" style="color:transparent" src="/static/images/1573476524078.jpeg"/>
-                                    <dl class="whitespace-nowrap text-sm font-medium leading-5">
-                                        <dd class="text-gray-900 dark:text-gray-100">Illia Vasylevskyi</dd>
-                                        <dd>
-                                            <a class="text-sm text-gray-500 transition hover:text-gray-600" target="_blank" rel="noopener noreferrer" href="mailto:ineersa.c@gmail.com">
-                                                <span class="sr-only">Email</span>
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="fill-current text-gray-700 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400 h-6 w-6">
-                                                   <title>Mail</title>
-                                                   <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
-                                                   <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
-                                                </svg>
-                                            </a>
-                                        </dd>
-                                    </dl>
-                                </li>
-                            </ul>
-                        </dd>
-                    </dl>
-                    <div class="divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
-                        <div class="prose max-w-none pb-8 pt-10 dark:prose-invert">
-                            @templ.Raw(parseMarkdown(postData.Content))
-                        </div>
-                    </div>
-                    <footer>
-                        <div class="divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700 xl:col-start-1 xl:row-start-2 xl:divide-y">
-                            if len(postData.Tags) > 0 {
-                                <div class="py-4 xl:py-8">
-                                    <h2 class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Tags</h2>
-                                    <div class="flex flex-wrap">
-                                        for _, tag := range postData.Tags {
-                                            <a class="cursor-pointer mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                                               hx-get={ string(templ.URL(fmt.Sprintf("/?tags=%s", tag.Slug))) }
-                                               hx-trigger="click"
-                                               hx-target="#main-content"
-                                               hx-swap="innerHTML transition:true"
-                                               hx-push-url="true"
-                                            >{tag.Name}</a>
-                                        }
-                                    </div>
-                                </div>
-                            }
-                            if postData.NextArticle.IsExist {
-                                <div class="flex justify-between py-4 xl:block xl:space-y-8 xl:py-8">
-                                    <div>
-                                        <h2 class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Next Article</h2>
-                                        <div class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
-                                            <a hx-get={ string(templ.URL(fmt.Sprintf("/post/%s", postData.NextArticle.ArticleInfo.Slug))) }
-                                               href={ templ.URL(fmt.Sprintf("/post/%s", postData.NextArticle.ArticleInfo.Slug)) }
-                                               hx-trigger="click"
-                                               hx-target="#main-content"
-                                               hx-swap="innerHTML transition:true"
-                                               hx-push-url="true">{postData.NextArticle.ArticleInfo.Title}</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                            if postData.PreviousArticle.IsExist {
-                                <div class="flex justify-between py-4 xl:block xl:space-y-8 xl:py-8">
-                                    <div>
-                                        <h2 class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Previous Article</h2>
-                                        <div class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
-                                            <a hx-get={ string(templ.URL(fmt.Sprintf("/post/%s", postData.PreviousArticle.ArticleInfo.Slug))) }
-                                               href={ templ.URL(fmt.Sprintf("/post/%s", postData.PreviousArticle.ArticleInfo.Slug)) }
-                                               hx-trigger="click"
-                                               hx-target="#main-content"
-                                               hx-swap="innerHTML transition:true"
-                                               hx-push-url="true">{postData.PreviousArticle.ArticleInfo.Title}</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-
-                        </div>
-                        <div class="pt-4 xl:pt-8">
-                            <a class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400" aria-label="Back to the blog"
-                            hx-get="/"
-                            href="/"
-                            hx-trigger="click"
-                            hx-target="#main-content"
-                            hx-swap="innerHTML transition:true"
-                            hx-push-url="true">
-                                ← Back to the blog
-                            </a>
-                        </div>
-                    </footer>
-                </div>
-            </div>
-        </article>
-    </section>
+	@Metadata(metadata)
+	<section class="mx-auto max-w-3xl px-4 sm:px-6 xl:max-w-6xl xl:px-0" x-on:htmx:after-settle.window="hljs.highlightAll()">
+		<article>
+			<div class="xl:divide-y xl:divide-gray-200 xl:dark:divide-gray-700">
+				<header class="pt-6 xl:pb-6">
+					<div class="space-y-1 text-center">
+						<dl class="space-y-10">
+							<div>
+								<dt class="sr-only">Published on</dt>
+								<dd class="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+									<time datetime={ postData.PublishedAt.Format(time.RFC3339) }>{ postData.PublishedAt.Format("Monday, January 2, 2006") }</time>
+								</dd>
+							</div>
+						</dl>
+						<div>
+							<h1 class="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-5xl md:leading-14">
+								{ postData.Title }
+							</h1>
+						</div>
+					</div>
+				</header>
+				<div class="grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 dark:divide-gray-700 xl:grid xl:grid-cols-4 xl:gap-x-6 xl:divide-y-0">
+					<dl class="pb-10 pt-6 xl:border-b xl:border-gray-200 xl:pt-11 xl:dark:border-gray-700">
+						<dt class="sr-only">Author</dt>
+						<dd>
+							<ul class="flex flex-wrap justify-center gap-4 sm:space-x-12 xl:block xl:space-x-0 xl:space-y-8">
+								<li class="flex items-center space-x-2">
+									<img alt="avatar" loading="lazy" width="38" height="38" decoding="async" data-nimg="1" class="h-10 w-10 rounded-full" style="color:transparent" src="/static/images/1573476524078.jpeg"/>
+									<dl class="whitespace-nowrap text-sm font-medium leading-5">
+										<dd class="text-gray-900 dark:text-gray-100">Illia Vasylevskyi</dd>
+										<dd>
+											<a class="text-sm text-gray-500 transition hover:text-gray-600" target="_blank" rel="noopener noreferrer" href="mailto:ineersa.c@gmail.com">
+												<span class="sr-only">Email</span>
+												<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="fill-current text-gray-700 hover:text-primary-500 dark:text-gray-200 dark:hover:text-primary-400 h-6 w-6">
+													<title>Mail</title>
+													<path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"></path>
+													<path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"></path>
+												</svg>
+											</a>
+										</dd>
+									</dl>
+								</li>
+							</ul>
+						</dd>
+					</dl>
+					<div class="divide-y divide-gray-200 dark:divide-gray-700 xl:col-span-3 xl:row-span-2 xl:pb-0">
+						<div class="prose max-w-none pb-8 pt-10 dark:prose-invert">
+							@templ.Raw(parseMarkdown(postData.Content))
+						</div>
+					</div>
+					<footer>
+						<div class="divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700 xl:col-start-1 xl:row-start-2 xl:divide-y">
+							if len(postData.Tags) > 0 {
+								<div class="py-4 xl:py-8">
+									<h2 class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Tags</h2>
+									<div class="flex flex-wrap">
+										for _, tag := range postData.Tags {
+											<a
+												class="cursor-pointer mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+												hx-get={ string(templ.URL(fmt.Sprintf("/?tags=%s", tag.Slug))) }
+												hx-trigger="click"
+												hx-target="#main-content"
+												hx-swap="innerHTML transition:true"
+												hx-push-url="true"
+											>{ tag.Name }</a>
+										}
+									</div>
+								</div>
+							}
+							if postData.NextArticle.IsExist {
+								<div class="flex justify-between py-4 xl:block xl:space-y-8 xl:py-8">
+									<div>
+										<h2 class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Next Article</h2>
+										<div class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+											<a
+												hx-get={ string(templ.URL(fmt.Sprintf("/post/%s", postData.NextArticle.ArticleInfo.Slug))) }
+												href={ templ.URL(fmt.Sprintf("/post/%s", postData.NextArticle.ArticleInfo.Slug)) }
+												hx-trigger="click"
+												hx-target="#main-content"
+												hx-swap="innerHTML transition:true"
+												hx-push-url="true"
+											>{ postData.NextArticle.ArticleInfo.Title }</a>
+										</div>
+									</div>
+								</div>
+							}
+							if postData.PreviousArticle.IsExist {
+								<div class="flex justify-between py-4 xl:block xl:space-y-8 xl:py-8">
+									<div>
+										<h2 class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Previous Article</h2>
+										<div class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+											<a
+												hx-get={ string(templ.URL(fmt.Sprintf("/post/%s", postData.PreviousArticle.ArticleInfo.Slug))) }
+												href={ templ.URL(fmt.Sprintf("/post/%s", postData.PreviousArticle.ArticleInfo.Slug)) }
+												hx-trigger="click"
+												hx-target="#main-content"
+												hx-swap="innerHTML transition:true"
+												hx-push-url="true"
+											>{ postData.PreviousArticle.ArticleInfo.Title }</a>
+										</div>
+									</div>
+								</div>
+							}
+						</div>
+						<div class="pt-4 xl:pt-8">
+							<a
+								class="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+								aria-label="Back to the blog"
+								hx-get="/"
+								href="/"
+								hx-trigger="click"
+								hx-target="#main-content"
+								hx-swap="innerHTML transition:true"
+								hx-push-url="true"
+							>
+								← Back to the blog
+							</a>
+						</div>
+					</footer>
+				</div>
+			</div>
+		</article>
+	</section>
 }
