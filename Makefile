@@ -17,7 +17,7 @@ parcel-build: ## build with parcel
 
 .PHONY: npm-build
 npm-build: ## build with npm
-	npm install && npm run build
+	npm install --production && npm run build
 
 .PHONY: build
 build: ## build binary
