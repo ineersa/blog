@@ -24,6 +24,7 @@ jobs:
     steps:
       - name: Configure SSH
         run: |
+          rm ~/.ssh/config
           cat >>~/.ssh/config <<END
           Host blog_prod
             HostName $SSH_HOST
