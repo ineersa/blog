@@ -2,10 +2,6 @@ name: deploy
 on:
   release:
     types: [published]
-  push:
-    branches:
-      - main
-      - master
 
 permissions:
   contents: read
