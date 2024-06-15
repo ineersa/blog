@@ -31,12 +31,10 @@ jobs:
             User $SSH_USER
             IdentityFile ~/.ssh/id_rsa.pub
             StrictHostKeyChecking no
-            SetEnv PATH=$SSH_PATH
           END
         env:
           SSH_USER: ${{ secrets.USERNAME }}
           SSH_HOST: ${{ secrets.HOST }}
-          SSH_PATH: ${{ secrets.PATH }}
       - name: Go to working directory and pull
         run: ssh blog_prod 'cd /var/www/blog.ineersa.com && git pull'
       - name: Build app
