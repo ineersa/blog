@@ -1,10 +1,10 @@
 name: pipeline
 on:
   workflow_call:
-  push:
-    branches:
-      - main
-      - master
+#  push:
+#    branches:
+#      - main
+#      - master
   pull_request:
 
 permissions:

@@ -34,12 +34,10 @@ jobs:
         env:
           SSH_USER: ${{ secrets.USERNAME }}
           SSH_HOST: ${{ secrets.HOST }}
-      - name: Go to working directory
-        run: ssh blog_prod 'cd /var/www/blog.ineersa.com'
-      - name: Git pull
-        run: ssh blog_prod 'git pull'
+      - name: Go to working directory and pull
+        run: ssh blog_prod 'cd /var/www/blog.ineersa.com && git pull'
       - name: Build app
-        run: ssh blog_prod 'make build-all'
+        run: ssh blog_prod 'cd /var/www/blog.ineersa.com && make build-all'
       - name: Restart service
         run: ssh blog_prod 'systemctl restart blog.service'
       - name: Check status
