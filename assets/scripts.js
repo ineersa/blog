@@ -3,6 +3,8 @@ import 'htmx.org'
 import Alpine from 'alpinejs'
 import * as htmx from 'htmx.org'
 import * as hljs from 'highlight.js/lib/common'
+import nginx from 'highlight.js/lib/languages/nginx'
+hljs.registerLanguage('nginx', nginx)
 
 // Add Alpine instance to window object.
 window.Alpine = Alpine
