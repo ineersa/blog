@@ -5,10 +5,12 @@ import (
 	"log"
 	"log/slog"
 	"os"
+	"time"
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/ineersa/blog/models"
 	"github.com/joho/godotenv"
+	"github.com/patrickmn/go-cache"
 )
 
 func main() {
@@ -39,8 +41,8 @@ func main() {
 		log.Fatal(pingErr)
 	}
 	slog.Info("Mysql connected!")
-
-	tagsModel := models.NewTagsModel(db)
+	cacheService := cache.New(5*time.Minute, 10*time.Minute)
+	tagsModel := models.NewTagsModel(db, cacheService)
 	categoriesModel := models.NewCategoriesModel(db)
 	postsModel := models.NewPostsModel(db, tagsModel, categoriesModel)
 

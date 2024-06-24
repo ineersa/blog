@@ -3,17 +3,20 @@ package models
 import (
 	"database/sql"
 	"fmt"
+	"github.com/patrickmn/go-cache"
 	"log/slog"
 	"net/url"
 	"strings"
+	"time"
 )
 
 type TagsModel struct {
-	database *sql.DB
+	database     *sql.DB
+	cacheService *cache.Cache
 }
 
-func NewTagsModel(database *sql.DB) *TagsModel {
-	return &TagsModel{database: database}
+func NewTagsModel(database *sql.DB, cacheService *cache.Cache) *TagsModel {
+	return &TagsModel{database: database, cacheService: cacheService}
 }
 
 type TagWithCount struct {
@@ -29,6 +32,11 @@ type Tag struct {
 }
 
 func (model *TagsModel) GetTagsDictionary() (map[int]Tag, error) {
+	if cached, found := model.cacheService.Get("tagsDictionary"); found {
+		if cachedTags, ok := cached.(map[int]Tag); ok {
+			return cachedTags, nil
+		}
+	}
 	tagsDictionary := make(map[int]Tag)
 	rows, err := model.database.Query("SELECT id, name, slug FROM tags")
 	if err != nil {
@@ -53,6 +61,8 @@ func (model *TagsModel) GetTagsDictionary() (map[int]Tag, error) {
 		}
 		tagsDictionary[int(tag.ID)] = tag
 	}
+
+	model.cacheService.Set("tagsDictionary", tagsDictionary, 10*time.Minute)
 
 	return tagsDictionary, nil
 }
