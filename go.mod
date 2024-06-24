@@ -11,7 +11,4 @@ require (
 	github.com/yuin/goldmark v1.7.1
 )
 
-require (
-	filippo.io/edwards25519 v1.1.0 // indirect
-	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
-)
+require filippo.io/edwards25519 v1.1.0 // indirect
