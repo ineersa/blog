@@ -10,6 +10,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/ineersa/blog/services"
 )
 
 const DefaultPageSize = 5
@@ -171,8 +173,15 @@ func (pageData *PostsListPageData) GetLink(changes map[string]string) string {
 func (pageData *PostsListPageData) formWherePart(tagsDictionary map[int]Tag, categoriesDictionary map[int]Category) (where string, values []any) {
 	where = " WHERE p.published = 1 "
 	if len(pageData.Filters.Search) >= MinSearchSize {
-		where += " AND p.title LIKE ? "
-		values = append(values, "%"+pageData.Filters.Search+"%")
+		searchResponse := services.Search(pageData.Filters.Search)
+		if len(searchResponse.IDs) > 0 {
+			inClause, args := buildInClause("p.id", searchResponse.IDs)
+			where += fmt.Sprintf(" AND %s ", inClause)
+			values = append(values, args...)
+		} else {
+			where += " AND p.title LIKE ? "
+			values = append(values, "%"+pageData.Filters.Search+"%")
+		}
 	}
 	if pageData.Filters.Category != "" {
 		category := 0
