@@ -5,6 +5,7 @@ import "time"
 import "fmt"
 import "github.com/yuin/goldmark"
 import "github.com/ineersa/blog/structs"
+import "bytes"
 
 func parseMarkdown(content string) string {
 	mdRenderer := goldmark.New()
