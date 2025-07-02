@@ -225,7 +225,7 @@ func buildInClause(field string, values []int) (inClause string, args []interfac
 }
 
 func (post *Post) GetThumbnailLink() string {
-	return "/shared/" + post.Thumbnail
+	return "/shared/" + post.Thumbnail + "?width=240"
 }
 
 func (model *PostsModel) GetCount(wherePart string, whereValues []any) (int, error) {
