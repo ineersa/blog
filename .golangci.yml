@@ -1,6 +1,8 @@
 # Auto-generated .golangci.yml file.
 # See https://gowebly.org for more information.
 
+version: "2"
+
 # Linters settings.
 linters-settings:
   tagalign:
@@ -28,9 +30,6 @@ linters-settings:
 
   gocyclo:
     min-complexity: 15
-
-  gofmt:
-    simplify: false
 
   mnd:
     checks:
@@ -67,44 +66,34 @@ linters-settings:
         disabled: true
       - name: unused-parameter
 
+  copyloopvar:
+    check-alias: true
 
 # Linters to enable.
 linters:
   disable-all: true
 
   enable:
-    - bodyclose
+    - copyloopvar
     - dogsled
     - dupl
     - errcheck
     - errorlint
-    - exportloopref
-    - funlen
     - gocheckcompilerdirectives
     - gochecknoinits
     - goconst
     - gocritic
     - gocyclo
-    - gofmt
-    - goimports
     - mnd
     - goprintffuncname
-    - gosec
-    - gosimple
     - govet
     - ineffassign
-    - lll
     - misspell
     - nakedret
-    - noctx
     - nolintlint
     - nilerr
     - nilnil
-    - revive
     - staticcheck
-    - stylecheck
-    - typecheck
-    - tagalign
     - unconvert
     - unparam
     - unused
@@ -115,6 +104,9 @@ issues:
     - path: _test\.go
       linters:
         - mnd
+    - linters:
+        - gosec
+      text: "G202:"
   exclude-files:
     - '.*_templ\\.go$'
 
