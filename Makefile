@@ -9,7 +9,7 @@ lint: ## run golang linter
 
 .PHONY: templ
 templ: ## templ generate
-	go run github.com/a-h/templ/cmd/templ@latest generate
+	go run github.com/a-h/templ/cmd/templ@$$(go list -m -f '{{.Version}}' github.com/a-h/templ) generate
 
 .PHONY: parcel-build
 parcel-build: ## build with parcel
@@ -17,7 +17,7 @@ parcel-build: ## build with parcel
 
 .PHONY: npm-build
 npm-build: ## build with npm
-	npm install && npm run build
+	npm ci && npm run build
 
 .PHONY: build
 build: ## build binary
@@ -29,4 +29,4 @@ run: lint templ parcel-build build ## run binary
 
 .PHONY: build-all
 build-all: npm-build templ ## build for prod
-	go mod tidy -v && go build -o ./bin/blog -v
+	go build -mod=readonly -o ./bin/blog -v

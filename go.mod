@@ -2,7 +2,7 @@ module github.com/ineersa/blog
 
 go 1.23.0
 
-toolchain go1.23.10
+toolchain go1.27.4
 
 require (
 	github.com/a-h/templ v0.3.906
